@@ -1,0 +1,50 @@
+﻿@using CarCenterContracts.ViewModels
+@model List<WorkerReportViewModel>
+@{
+	ViewData["Title"] = "ReportOnly";
+}
+<div class="text-center">
+	<h1 class="display-4">Список машин по предпродажным работам </h1>
+</div>
+<div class="text-center">
+	@{
+		if (Model == null)
+		{
+			<h3 class="display-4">Надо войти!</h3>
+			return;
+		}
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Предпродажная работа
+					</th>
+					<th>
+						Машины
+					</th>
+					<th>
+						Кол-во
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var reportRow in Model)
+				{
+					<tr>
+						<td>
+							@Html.DisplayFor(modelItem => reportRow.Id)
+						</td>
+						<td>
+						<!--Как же сложно делать без логики-->
+							@Html.DisplayFor(modelItem => reportRow.CarsPresale)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => reportRow.Count)
+						</td>
+
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+</div>

@@ -1,0 +1,83 @@
+﻿@using CarCenterContracts.ViewModels;
+@using CarCenterDataModels.Enums;
+
+@model FeatureViewModel;
+
+@{
+    ViewData["Title"] = "CreateFeature";
+}
+<div class="text-center">
+    <h2 class="display-4">Особенность</h2>
+</div>
+<form id="featureForm" method="post">
+    <input type="text" name="id" id="id" value="@Model.Id" hidden="hidden" />
+    <div class="row">
+        <div class="col-4">Вспомогательные устройства:</div>
+        <div class="col-8">
+            <select name="HelpDevice" id="HelpDevice" value="@Model.HelpDevice">
+                @foreach (var value in Enum.GetValues(typeof(HelpDevices)))
+                {
+                    <option value="@value" selected="@(value.Equals(Model.HelpDevice) ? "selected" : null)">@value</option>
+                }
+            </select>
+            <span id="HelpDeviceError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Тип привода:</div>
+        <div class="col-8">
+            <select name="DriveType" id="DriveType" value="@Model.DriveType">
+                @foreach (var value in Enum.GetValues(typeof(DriveTypes)))
+                {
+                    <option value="@value" selected="@(value.Equals(Model.DriveType) ? "selected" : null)">@value</option>
+                }
+            </select>
+            <span id="DriveTypeeError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Цвет салона:</div>
+        <div class="col-8">
+            <input type="text" name="CabinColor" id="CabinColor" value="@Model.CabinColor" />
+            <span id="CabinColorError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Цена:</div>
+        <div class="col-8">
+            <input type="text" name="Price" id="Price" value="@Model.Price" />
+            <span id="PriceError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4"><input type="submit" value="Сохранить" class="btn btn-primary" /></div>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#bundlinglForm').submit(function (event) {
+            var HelpDevice = $('#HelpDevice').val();
+            var CabinColor = $('#CabinColor').val();
+            var DriveType = $('#DriveType').val();
+            var Price = $('#Price').val();
+            var isValid = true;
+
+            $('#PriceError').text('');
+            $('#HelpDeviceError').text('');
+            $('#CabinColorError').text('');
+            $('#DriveTypeError').text('');
+
+            if (isNaN(price) || cost <= 0) {
+                $('#PriceError').text('Цена должна быть положительным числом.');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>

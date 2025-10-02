@@ -1,0 +1,94 @@
+﻿@using CarCenterContracts.ViewModels;
+
+@model List<OrderViewModel>
+
+@{
+	ViewData["Title"] = "Orders";
+}
+
+<div class="text-center">
+	<h1 class="display-4">Покупки</h1>
+</div>
+
+<div class="text-center">
+	@{
+		if (Model == null)
+		{
+			<h3 class="display-4">Авторизируйтесь</h3>
+			return;
+		}
+		<p>
+			<a asp-action="CreateOrder" asp-route-id="0">Создать покупку</a>
+		</p>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Номер
+					</th>
+					<th>
+						Тип оплаты
+					</th>
+					<th>
+						Статус оплаты
+					</th>
+					<th>
+						Дата оплаты
+					</th>
+					<th>
+						ФИО покупателя
+					</th>
+					<th>
+						Имя работника
+					</th>
+					<th>
+						Сумма
+					</th>
+					<th>
+						Изменить покупку
+					</th>
+					<th>
+						Удалить покупку
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							@Html.DisplayFor(modelItem => item.Id)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.PaymentType)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.PaymentStatus)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.PaymentDate)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.BuyerFCS)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.WorkerName)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Sum)
+						</td>
+						<td>
+							<a asp-action="CreateOrder" asp-route-id="@item.Id" class="btn btn-primary">Изменить</a>
+						</td>
+						<td>
+							<form method="post">
+								<input type="text" title="id" name="id" value="@item.Id" hidden="hidden" />
+								<input type="submit" class="btn btn-danger" value="Удалить" />
+							</form>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+</div>

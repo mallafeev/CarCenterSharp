@@ -1,0 +1,112 @@
+﻿﻿@{
+    ViewData["Title"] = "Register";
+}
+<div class="text-center">
+    <h2 class="display-4">Личные данные Кладовщика</h2>
+</div>
+<form method="post">
+    <div class="row">
+        <div class="col-4">Имя:</div>
+        <div class="col-8">
+            <input type="text" name="name" id="name" value="@Model.Name" />
+            <span id="nameError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Фамилия</div>
+        <div class="col-8">
+            <input type="text" name="surname" id="surname" value="@Model.Surname" />
+            <span id="surnameError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Отчество:</div>
+        <div class="col-8">
+            <input type="text" name="patronymic" id="patronymic" value="@Model.Patronymic" />
+            <span id="patronymicError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Почта:</div>
+        <div class="col-8">
+            <input type="email" name="email" id="email" value="@Model.Email" />
+            <span id="emailError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Телефон:</div>
+        <div class="col-8">
+            <input type="text" name="phone" id="phone" value="@Model.PhoneNumber" />
+            <span id="phoneError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Пароль:</div>
+        <div class="col-8">
+            <input type="password" name="password1" id="password1" value="@Model.Password" />
+            <span id="password1Error" class="text-danger"></span>
+        </div>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#registerForm').submit(function (event) {
+            var name = $('#name').val();
+            var surname = $('#surname').val();
+            var patronymic = $('#patronymic').val();
+            var phone = $('#phone').val();
+            var email = $('#email').val();
+            var password1 = $('#password1').val();
+            var isValid = true;
+
+            $('#nameError').text('');
+            $('#surnameError').text('');
+            $('#patronymicError').text('');
+            $('#emailError').text('');
+            $('#phoneError').text('');
+            $('#password1Error').text('');
+
+            // Валидация имени
+            if (name.length < 2 || name.length > 50) {
+                $('#nameError').text('Имя должно быть от 2 до 50 символов.');
+                isValid = false;
+            }
+
+            // Валидация фамилии
+            if (surname.length < 2 || surname.length > 50) {
+                $('#surnameError').text('Фамилия должно быть от 2 до 50 символов.');
+                isValid = false;
+            }
+
+            // Валидация отчества
+            if (patronymic.length < 2 || patronymic.length > 50) {
+                $('#patronymicError').text('Отчество должен быть от 2 до 50 символов.');
+                isValid = false;
+            }
+            // Валидация телефона
+            if (phone.length < 1 || phone.length > 12) {
+                $('#phoneError').text('Телефон должен быть от 1 до 12 символов.');
+                isValid = false;
+            }
+
+            // Валидация почты
+            var emailPattern = /^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!emailPattern.test(email)) {
+                $('#emailError').text('Неверный формат почты.');
+                isValid = false;
+            }
+
+            // Валидация пароля
+            if (password1.length < 8 || password1.length > 20) {
+                $('#password1Error').text('Пароль должен быть от 8 до 20 символов.');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>

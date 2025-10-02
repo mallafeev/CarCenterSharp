@@ -1,0 +1,46 @@
+﻿@using CarCenterContracts.ViewModels
+@model List<OrderViewModel>
+@{
+	ViewData["Title"] = "Order";
+}
+<div class="text-center">
+	<h1 class="display-4">Отчёт по покупкам</h1>
+</div>
+<div class="text-center">
+	<form method="post">
+		@{
+			if (Model == null)
+			{
+				<h3 class="display-4">Войдите!</h3>
+				return;
+			}
+			<div class="row mb-5">
+				<div class="col-4">Формат получения:</div>
+				<div class="col-8">
+					<input type="radio" id="email" name="saveFormat" value="email">
+					<label for="email">почта</label>
+					<input type="radio" id="site" name="saveFormat" value="site">
+					<label for="site">на сайте</label>
+				</div>
+			</div>
+			<div class="row mb-5">
+				<div class="col-4">Начальная дата:</div>
+				<div class="col-8">
+					<input type="date" id="startDate" name="startDate" class="form-control">
+				</div>
+			</div>
+			<div class="row mb-5">
+				<div class="col-4">Конечная дата:</div>
+				<div class="col-8">
+					<input type="date" id="endDate" name="endDate" class="form-control">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-4"></div>
+				<div class="col-2"><input type="submit" value="Получить отчёт" class="btn btn-primary" /></div>
+				<div class="col-4"></div>
+				<div class="col-2"><input type="button" value="Отменить" class="btn btn-secondary" /></div>
+			</div>
+		}
+	</form>
+</div>

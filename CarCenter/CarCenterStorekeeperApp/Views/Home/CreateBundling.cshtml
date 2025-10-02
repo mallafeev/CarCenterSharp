@@ -1,0 +1,175 @@
+﻿@using CarCenterContracts.ViewModels;
+@using CarCenterDataModels.Enums;
+@{
+    ViewData["Title"] = "CreateBundling";
+    ViewBag.Presales = Model.BundlingsPresale;
+}
+@model BundlingViewModel;
+<div class="text-center">
+    <h2 class="display-4">Комплектация</h2>
+</div>
+<form id="bundlingForm" method="post">
+    <input type="text" name="id" id="id" value="@Model.Id" hidden="hidden" />
+    <div class="row">
+        <div class="col-4">Пакет оборудования:</div>
+        <div class="col-8">
+            <select name="EquipmentPackage" id="EquipmentPackage" value="@Model.EquipmentPackage">
+                @foreach (var value in Enum.GetValues(typeof(EquipmentPackage)))
+                {
+                    <option value="@value" selected="@(value.Equals(Model.EquipmentPackage) ? "selected" : null)">@value</option>
+                }
+            </select>
+            <span id="EquipmentPackageError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Пакет шин:</div>
+        <div class="col-8">
+            <select name="TirePackage" id="TirePackage" value="@Model.TirePackage">
+                @foreach (var value in Enum.GetValues(typeof(TirePackage)))
+                {
+                    <option value="@value" selected="@(value.Equals(Model.TirePackage) ? "selected" : null)">@value</option>
+                }
+            </select>
+            <span id="TirePackageError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Пакет инструментов:</div>
+        <div class="col-8">
+            <select name="ToolKit" id="ToolKit" value="@Model.ToolKit">
+                @foreach (var value in Enum.GetValues(typeof(ToolKit)))
+                {
+                    <option value="@value" selected="@(value.Equals(Model.ToolKit) ? "selected" : null)">@value</option>
+                }
+            </select>
+            <span id="ToolKiteError" class="text-danger"></span>
+        </div>
+    </div>
+    @if (ViewBag.AllPresales != null && ViewBag.AllPresales.Count != 0)
+    {
+        <div class="container">
+            <div>Комлектации</div>
+            <div class="table-responsive-lg">
+                <table id="presalesTable" class="display">
+                    <thead>
+                        <tr>
+                            <th>ID комплектации</th>
+                            <th>     </th>
+                            <th>Удалить</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var presale in ViewBag.Presales)
+                        {
+                            <tr data-presale-id="@presale.Value.Id">
+                                <td>
+                                    <input type="hidden" name="presaleIds" value="@presale.Value.Id" />@presale.Value.Id
+                                </td>
+                                <th>     </th>
+                                <td><button type="button" class="deletePresale" data-presale-id="@presale.Value.Id">Удалить</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <select id="presaleSelect" class="form-control">
+                <option value="">Выберите предпродажную работу</option>
+                @foreach (var presale in ViewBag.AllPresales)
+                {
+                    <option value="@presale.Id" data-price="@presale.Price">Предпродажная работа @presale.Id</option>
+                }
+            </select>
+            <button type="button" id="addPresale" class="btn btn-secondary">Добавить предпродажную работу</button>
+        </div>
+    }
+    <div class="row">
+        <div class="col-4">Цена:</div>
+        <div class="col-8">
+            <input type="text" name="Price" id="Price" value="@Model.Price" />
+            <span id="PriceError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4"><input type="submit" value="Сохранить" class="btn btn-primary" /></div>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.deletePresale', function () {
+            var row = $(this).closest('tr');
+            row.remove();
+            updateSum();
+        });
+        $('#addPresale').click(function () {
+            var selectedPresale = $('#presaleSelect option:selected');
+            if (selectedPresale.val()) {
+                var presaleId = selectedPresale.val();
+                var exists = false;
+                $('#presalesTable tbody tr').each(function () {
+                    if ($(this).data('presale-id') == presaleId) {
+                        exists = true;
+                        return false;
+                    }
+                });
+                if (exists) {
+                    alert('Эта работа уже добавлена.');
+                    return;
+                }
+
+                var presaleName = selectedPresale.text();
+                var presalePrice = selectedPresale.data('price');
+
+                var newRow = `
+                                                    <tr data-presale-id="${presaleId}">
+                                                <td>
+                                                            <input type="hidden" name="presaleIds" value="${presaleId}" />
+                                                        ${presaleId}
+                                                </td>
+                                                <th>     </th>
+                                                            <td class="presale-price" data-price="${presalePrice}">${presalePrice}</td>
+                                                <th>     </th>
+                                                            <td><button type="button" class="deletePresale" data-presale-id="${presaleId}">Удалить</button></td>
+                                            </tr>
+                                        `;
+                $('#presalesTable tbody').append(newRow);
+
+                $('.deletePresale').off('click').on('click', function () {
+                    var row = $(this).closest('tr');
+                    row.remove();
+                    updateSum();
+                });
+
+                $('#presaleSelect').val('');
+
+                updateSum();
+            } else {
+                alert('Выберите работу для добавления');
+            }
+        });
+        $('#bundlinglForm').submit(function (event) {
+            var EquipmentPackage = $('#EquipmentPackage').val();
+            var TirePackage = $('#TirePackage').val();
+            var ToolKit = $('#ToolKit').val();
+            var Price = $('#Price').val();
+            var isValid = true;
+
+            $('#PriceError').text('');
+            $('#EquipmentPackageError').text('');
+            $('#TirePackageError').text('');
+            $('#ToolKitError').text('');
+
+            if (isNaN(price) || cost <= 0) {
+                $('#PriceError').text('Цена должна быть положительным числом.');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>

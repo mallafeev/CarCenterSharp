@@ -1,0 +1,82 @@
+﻿@using CarCenterContracts.ViewModels;
+
+@model List<FeatureViewModel>
+
+@{
+	ViewData["Title"] = "Features";
+}
+
+<div class="text-center">
+	<h1 class="display-4">Особенности</h1>
+</div>
+
+<div class="text-center">
+	@{
+		if (Model == null)
+		{
+			<h3 class="display-4">Авторизируйтесь</h3>
+			return;
+		}
+		<p>
+			<a asp-action="CreateFeature" asp-route-id="0">Создать особенность</a>
+		</p>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Номер
+					</th>
+					<th>
+						Вспомогательное устройтсво
+					</th>
+					<th>
+						Цвет кабины
+					</th>
+					<th>
+						Тип привода
+					</th>
+					<th>
+						Цена
+					</th>
+					<th>
+						Изменить изделие
+					</th>
+					<th>
+						Удалить изделие
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							@Html.DisplayFor(modelItem => item.Id)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.HelpDevice)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.CabinColor)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.DriveType)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Price)
+						</td>
+						<td>
+							<a asp-action="CreateFeature" asp-route-id="@item.Id" class="btn btn-primary">Изменить</a>
+						</td>
+						<td>
+							<form method="post">
+								<input type="text" title="id" name="id" value="@item.Id" hidden="hidden" />
+								<input type="submit" class="btn btn-danger" value="Удалить" />
+							</form>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+</div>

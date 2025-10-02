@@ -1,0 +1,35 @@
+﻿@using CarCenterContracts.ViewModels
+
+@model List<ReportCarViewModel>
+
+@{
+    ViewData["Title"] = "Отчет машина - предпродажные";
+}
+<div class="text-center">
+    <h1 class="display-4">Список машин с предпродажными</h1>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Машина</th>
+            <th>Предпродажные</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detail in Model)
+        {
+            <tr>
+                <td>@detail.VINnumber</td>
+                <td>
+                    <ul>
+                        @foreach (var workshop in detail.Presales)
+                        {
+                            <li>@workshop</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

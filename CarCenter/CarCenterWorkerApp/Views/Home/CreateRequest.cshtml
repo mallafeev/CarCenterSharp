@@ -1,0 +1,55 @@
+﻿@using CarCenterContracts.ViewModels;
+@using CarCenterDataModels.Enums;
+
+@model RequestViewModel;
+
+@{
+    ViewData["Title"] = "CreateRequest";
+}
+<div class="text-center">
+    <h2 class="display-4">Пожелание</h2>
+</div>
+<form id="featureForm" method="post">
+    <input type="text" name="id" id="id" value="@Model.Id" hidden="hidden" />
+    <div class="row">
+        <div class="col-4">Описание пожелания:</div>
+        <div class="col-8">
+            <input type="text" name="Description" id="Description" value="@Model.Description" />
+            <span id="DescriptionError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Тип пожелания:</div>
+        <div class="col-8">
+            <select name="RequestType" id="RequestType" value="@Model.RequestType">
+                @foreach (var value in Enum.GetValues(typeof(RequestTypes)))
+                {
+                    <option value="@value" selected="@(value.Equals(Model.RequestType) ? "selected" : null)">@value</option>
+                }
+            </select>
+            <span id="RequestTypeError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4"><input type="submit" value="Сохранить" class="btn btn-primary" /></div>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#requestForm').submit(function (event) {
+            var RequestType = $('#RequestType').val();
+            var Description = $('#Description').val();
+            var isValid = true;
+            $('#RequestTypeError').text('');
+            $('#DescriptionError').text('');
+
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,70 @@
+﻿@using CarCenterContracts.ViewModels;
+
+@model List<RequestViewModel>
+
+@{
+	ViewData["Title"] = "Requests";
+}
+
+<div class="text-center">
+	<h1 class="display-4">Пожелания</h1>
+</div>
+
+<div class="text-center">
+	@{
+		if (Model == null)
+		{
+			<h3 class="display-4">Авторизируйтесь</h3>
+			return;
+		}
+		<p>
+			<a asp-action="CreateRequest" asp-route-id="0">Создать Пожелание</a>
+		</p>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Номер
+					</th>
+					<th>
+						Описание
+					</th>
+					<th>
+						Тип пожелания
+					</th>
+					<th>
+						Изменить пожелание
+					</th>
+					<th>
+						Удалить пожелание
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							@Html.DisplayFor(modelItem => item.Id)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Description)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.RequestType)
+						</td>
+						<td>
+							<a asp-action="CreateRequest" asp-route-id="@item.Id" class="btn btn-primary">Изменить</a>
+						</td>
+						<td>
+							<form method="post">
+								<input type="text" title="id" name="id" value="@item.Id" hidden="hidden" />
+								<input type="submit" class="btn btn-danger" value="Удалить" />
+							</form>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+</div>

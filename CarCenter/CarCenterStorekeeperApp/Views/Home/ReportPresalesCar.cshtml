@@ -1,0 +1,49 @@
+﻿@using CarCenterContracts.ViewModels
+@model List<StorekeeperReportViewModel>
+@{
+	ViewData["Title"] = "ReportOnly";
+}
+<div class="text-center">
+	<h1 class="display-4">Список предпродажных работ по машинам</h1>
+</div>
+<div class="text-center">
+	@{
+		if (Model == null)
+		{
+			<h3 class="display-4">Надо войти!</h3>
+			return;
+		}
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Машина
+					</th>
+					<th>
+						Предпродажные работы
+					</th>
+					<th>
+						Количество
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var reportRow in Model)
+				{
+					<tr>
+						<td>
+							@Html.DisplayFor(modelItem => reportRow.Id)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => reportRow.PresaleCars)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => reportRow.Count)
+						</td>
+
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+</div>

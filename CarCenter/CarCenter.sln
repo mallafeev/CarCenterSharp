@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarCenterDataModels", "CarCenterDataModels\CarCenterDataModels.csproj", "{0DF028FA-4404-46D3-9752-6B993A5E17DD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarCenterContracts", "CarCenterContracts\CarCenterContracts.csproj", "{35B11D95-5D0B-4D63-99E2-3ABF76178FDA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarCenterBusinessLogic", "CarCenterBusinessLogic\CarCenterBusinessLogic.csproj", "{F7C378AF-AFFA-4E6B-8F21-D1A607B43B9A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarCenterDatabaseImplement", "CarCenterDatabaseImplement\CarCenterDatabaseImplement.csproj", "{B441CCEB-C6EB-4573-87D6-A06F42623199}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarCenterStorekeeperApp", "CarCenterStorekeeperApp\CarCenterStorekeeperApp.csproj", "{6CF38151-471F-42EE-9A68-6A5FA1F87BD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarCenterWorkerApp", "CarCenterWorkerApp\CarCenterWorkerApp.csproj", "{557BE753-F505-4566-87FF-A0947CD8C52F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DF028FA-4404-46D3-9752-6B993A5E17DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DF028FA-4404-46D3-9752-6B993A5E17DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DF028FA-4404-46D3-9752-6B993A5E17DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DF028FA-4404-46D3-9752-6B993A5E17DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35B11D95-5D0B-4D63-99E2-3ABF76178FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35B11D95-5D0B-4D63-99E2-3ABF76178FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35B11D95-5D0B-4D63-99E2-3ABF76178FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35B11D95-5D0B-4D63-99E2-3ABF76178FDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7C378AF-AFFA-4E6B-8F21-D1A607B43B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7C378AF-AFFA-4E6B-8F21-D1A607B43B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7C378AF-AFFA-4E6B-8F21-D1A607B43B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7C378AF-AFFA-4E6B-8F21-D1A607B43B9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B441CCEB-C6EB-4573-87D6-A06F42623199}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B441CCEB-C6EB-4573-87D6-A06F42623199}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B441CCEB-C6EB-4573-87D6-A06F42623199}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B441CCEB-C6EB-4573-87D6-A06F42623199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CF38151-471F-42EE-9A68-6A5FA1F87BD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CF38151-471F-42EE-9A68-6A5FA1F87BD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CF38151-471F-42EE-9A68-6A5FA1F87BD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CF38151-471F-42EE-9A68-6A5FA1F87BD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{557BE753-F505-4566-87FF-A0947CD8C52F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{557BE753-F505-4566-87FF-A0947CD8C52F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{557BE753-F505-4566-87FF-A0947CD8C52F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{557BE753-F505-4566-87FF-A0947CD8C52F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9FAC8B11-3715-478A-813B-CFE6C308F517}
+	EndGlobalSection
+EndGlobal

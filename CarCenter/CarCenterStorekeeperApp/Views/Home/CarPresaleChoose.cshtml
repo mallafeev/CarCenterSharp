@@ -1,0 +1,54 @@
+﻿@using CarCenterContracts.ViewModels;
+@model List<CarViewModel>
+
+@{
+    ViewData["Title"] = "Выбор машин для отчета";
+}
+
+<h2>Выберите детали для отчета</h2>
+
+<form asp-controller="Home" asp-action="CarPresaleChoose" method="post" onsubmit="return validateForm()">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>Выберите автомобиль с VIN-номером:</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="selectedItems" value="@Model[i].Id" />
+                    </td>
+                    <td>@Model[i].VINnumber</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input type="hidden" id="reportType" name="reportType" value="default" />
+    <button type="submit" class="btn btn-primary" onclick="setReportType('default')">Сгенерировать отчет</button>
+    <button type="submit" class="btn btn-secondary" onclick="setReportType('excel')">Сгенерировать отчет в Excel</button>
+    <button type="submit" class="btn btn-secondary" onclick="setReportType('word')">Сгенерировать отчет в Word</button>
+    <div id="validationMessage" style="display:none;color:red;">Пожалуйста, выберите хотя бы одну деталь.</div>
+</form>
+
+@section Scripts {
+    <script>
+        function validateForm() {
+            var checkboxes = document.querySelectorAll('input[name="selectedItems"]:checked');
+            if (checkboxes.length === 0) {
+                document.getElementById('validationMessage').style.display = 'block';
+                return false;
+            } else {
+                document.getElementById('validationMessage').style.display = 'none';
+                return true;
+            }
+        }
+
+        function setReportType(type) {
+            document.getElementById('reportType').value = type;
+        }
+    </script>
+}

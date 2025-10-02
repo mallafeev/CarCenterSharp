@@ -1,0 +1,283 @@
+﻿@using CarCenterContracts.ViewModels;
+@using CarCenterDataModels.Enums;
+
+@model PresaleViewModel
+
+@{
+    ViewData["Title"] = "CreatePresale";
+    ViewBag.Bundlings = Model.PresaleBundlings;
+    ViewBag.Requests = Model.Requests;
+}
+<div class="text-center">
+    <h2 class="display-4">Создание предпродажной работы</h2>
+</div>
+<form id="presaleForm" method="post">
+    @if (Model.Id != 0){
+    <div class="row">
+        <div class="col-4">Статус:</div>
+        <div class="col-8">
+            <select name="PresaleStatus" id="PresaleStatus" value="@Model.PresaleStatus">
+                @foreach (var value in Enum.GetValues(typeof(PresaleStatus)))
+                {
+                        <option value="@value" selected="@(value.Equals(Model.PresaleStatus) ? "selected" : null)">@value</option>
+                }
+            </select>
+            <span id="PresaleStatusError" class="text-danger"></span>
+        </div>
+    </div>
+    }
+    <div class="row">
+        <div class="col-4">Описание:</div>
+        <div class="col-8">
+            <input type="text" name="Description" id="Description" value="@Model.Description" />
+            <span id="DescriptionError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Выполнить до:</div>
+        <div class="col-8">
+            <input type="text" name="DueTill" id="DueTill" value="@Model.DueTill" />
+            <span id="DueTillError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="container">
+        <div>Полжелания</div>
+        <div class="table-responsive-lg">
+            <table id="requestsTable" class="display">
+                <thead>
+                    <tr>
+                        <th>ID пожелания</th>
+                        <th>     </th>
+                        <th>Удалить</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var request in ViewBag.Requests)
+                    {
+                        <tr data-request-id="@request.Value.Id">
+                            <td>
+                                <input type="hidden" name="requestIds" value="@request.Value.Id" />@request.Value.Id
+                            </td>
+                            <th>     </th>
+                            <td><button type="button" class="deleteRequest" data-request-id="@request.Value.Id">Удалить</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <select id="requestSelect" class="form-control">
+            <option value="">Выберите пожелания</option>
+            @foreach (var request in ViewBag.AllRequests)
+            {
+                <option value="@request.Id" data-request="@request.Id">Пожелание @request.Id</option>
+            }
+        </select>
+        <button type="button" id="addRequest" class="btn btn-secondary">Добавить пожелание</button>
+    </div>
+    <div class="container">
+        <div>Комлектации</div>
+        <div class="table-responsive-lg">
+            <table id="bundlingsTable" class="display">
+                <thead>
+                    <tr>
+                        <th>ID комплектации</th>
+                        <th>     </th>
+                        <th>Стоимость</th>
+                        <th>     </th>
+                        <th>Удалить</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bundling in ViewBag.Bundlings)
+                    {
+                        <tr data-bundling-id="@bundling.Value.Id">
+                            <td>
+                                <input type="hidden" name="bundlingIds" value="@bundling.Value.Id" />@bundling.Value.Id
+                            </td>
+                            <th>     </th>
+                            <td class="bundling-price" data-price="@bundling.Value.Price">@bundling.Value.Price</td>
+                            <th>     </th>
+                            <td><button type="button" class="deleteBundling" data-bundling-id="@bundling.Value.Id">Удалить</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <select id="bundlingSelect" class="form-control">
+            <option value="">Выберите комплектацию</option>
+            @foreach (var bundling in ViewBag.AllBundlings)
+            {
+                <option value="@bundling.Id" data-price="@bundling.Price">Комплектация @bundling.Id</option>
+            }
+        </select>
+        <button type="button" id="addBundling" class="btn btn-secondary">Добавить комплектацию</button>
+    </div>
+    <div class="row">
+        <div class="col-4">Цена предпродажной работы:</div>
+        <div class="col-8">
+            <input type="text" name="Price" id="Price" value="@Model.Price" />
+            <span id="PriceError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Сумма:</div>
+        <div class="col-8"><input type="text" id="sum" name="sum" readonly /></div>
+    </div>
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4"><input type="submit" value="Сохранить" class="btn btn-primary" /></div>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        function updateSum() {
+            var sum = 0;
+            $('#bundlingsTable tbody tr').each(function () {
+                var price = $(this).find('.bundling-price').data('price');
+                sum += parseFloat(price);
+            });
+            var presalePrice = parseFloat($('#Price').val());
+            if (!isNaN(presalePrice)) {
+                sum += presalePrice;
+            }
+            $('#sum').val(sum.toFixed(2));
+        }
+
+        $(document).on('click', '.deleteBundling', function () {
+            var row = $(this).closest('tr');
+            row.remove();
+            updateSum();
+        });
+
+        $(document).on('click', '.deleteRequest', function () {
+            var row = $(this).closest('tr');
+            row.remove();
+            updateSum();
+        });
+
+        $('#addBundling').click(function () {
+            var selectedBundling = $('#bundlingSelect option:selected');
+            if (selectedBundling.val()) {
+                var bundlingId = selectedBundling.val();
+                var exists = false;
+                $('#bundlingsTable tbody tr').each(function () {
+                    if ($(this).data('bundling-id') == bundlingId) {
+                        exists = true;
+                        return false;
+                    }
+                });
+                if (exists) {
+                    alert('Эта комплектация уже добавлена.');
+                    return;
+                }
+
+                var bundlingName = selectedBundling.text();
+                var bundlingPrice = selectedBundling.data('price');
+
+                var newRow = `
+                                        <tr data-bundling-id="${bundlingId}">
+                                            <td>
+                                                <input type="hidden" name="bundlingIds" value="${bundlingId}" />
+                                                ${bundlingId}
+                                            </td>
+                                            <th>     </th>
+                                            <td class="bundling-price" data-price="${bundlingPrice}">${bundlingPrice}</td>
+                                            <th>     </th>
+                                            <td><button type="button" class="deleteBundling" data-bundling-id="${bundlingId}">Удалить</button></td>
+                                        </tr>
+                                    `;
+                $('#bundlingsTable tbody').append(newRow);
+
+                $('.deleteBundling').off('click').on('click', function () {
+                    var row = $(this).closest('tr');
+                    row.remove();
+                    updateSum();
+                });
+
+                $('#bundlingSelect').val('');
+
+                updateSum();
+            } else {
+                alert('Выберите комплектацию для добавления');
+            }
+        });
+
+        $('#addRequest').click(function () {
+            var selectedRequest = $('#requestSelect option:selected');
+            if (selectedRequest.val()) {
+                var requestId = selectedRequest.val();
+                var exists = false;
+                $('#requestsTable tbody tr').each(function () {
+                    if ($(this).data('request-id') == requestId) {
+                        exists = true;
+                        return false;
+                    }
+                });
+                if (exists) {
+                    alert('Это пожелание уже добавлено.');
+                    return;
+                }
+
+                var requestName = selectedRequest.text();
+
+                var newRow = `
+                                                            <tr data-request-id="${requestId}">
+                                                <td>
+                                                                    <input type="hidden" name="requestIds" value="${requestId}" />
+                                                            ${requestId}
+                                                </td>
+                                                <th>     </th>
+                                                                        <td><button type="button" class="deleteRequest" data-request-id="${requestId}">Удалить</button></td>
+                                            </tr>
+                                        `;
+                $('#requestsTable tbody').append(newRow);
+
+                $('.deleteRequest').off('click').on('click', function () {
+                    var row = $(this).closest('tr');
+                    row.remove();
+                    updateSum();
+                });
+
+                $('#requestSelect').val('');
+
+                updateSum();
+            } else {
+                alert('Выберите комплектацию для добавления');
+            }
+        });
+
+        $('#presaleForm').submit(function (event) {
+            var PresaleStatus = $('#PresaleStatus').val();
+            var Description = $('#Description').val();
+            var DueTill = $('#DueTill').val();
+            var Price = $('#Price').val();
+            var isValid = true;
+
+            $('#PresaleStatusError').text('');
+            $('#DescriptionError').text('');
+            $('#DueTillError').text('');
+            $('#PriceError').text('');
+            var totalBundlings = $('#bundlingsTable tbody tr').length;
+            if (totalBundlings == 0) {
+                alert('Пожалуйста, добавьте хотя бы одну комплектацию.');
+                isValid = false;
+            }
+
+            var totalRequests = $('#requestsTable tbody tr').length;
+            if (totalRequests == 0) {
+                alert('Пожалуйста, добавьте хотя бы одно пожелание.');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+
+        updateSum();
+    });
+</script>
+

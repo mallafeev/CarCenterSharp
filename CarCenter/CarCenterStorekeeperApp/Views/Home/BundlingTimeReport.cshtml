@@ -1,0 +1,50 @@
+﻿@using CarCenterContracts.ViewModels
+
+@model List<ReportBundlingViewModel>
+
+@{
+    ViewData["Title"] = "Bundlings on Time Bundlings";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Список комплектаций в диапазоне времени</h1>
+</div>
+
+<form asp-action="BundlingTimeMail" asp-controller="Home" method="post">
+    <button type="submit" class="btn btn-primary">Отправить отчет на почту</button>
+</form>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Комплектация</th>
+            <th>Заказ</th>
+            <th>Особенность</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detail in Model)
+        {
+            <tr>
+                <td>@detail.BundlingId</td>
+                <td>
+                    <ul>
+                        @foreach (var product in detail.Orders)
+                        {
+                            <li>@product</li>
+                        }
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        @foreach (var production in detail.Features)
+                        {
+                            <li>@production</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

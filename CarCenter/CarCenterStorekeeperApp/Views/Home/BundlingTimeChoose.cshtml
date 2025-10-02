@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Создание отчета";
+}
+
+<div class="text-center">
+    <h2 class="display-4">Создание отчета</h2>
+</div>
+<form id="TimeReportWeb" asp-controller="Home" method="post">
+    <div class="row mb-3">
+        <div class="col-4 text-right">
+            <label for="startDate">Дата начала:</label>
+        </div>
+        <div class="col-6">
+            <input type="date" id="startDate" name="startDate" class="form-control" required />
+            <span id="startDateError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-4 text-right">
+            <label for="endDate">Дата окончания:</label>
+        </div>
+        <div class="col-6">
+            <input type="date" id="endDate" name="endDate" class="form-control" required />
+            <span id="endDateError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-6 text-right">
+            <button type="button" id="generateReport" class="btn btn-primary">Создать отчет</button>
+        </div>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function validateDates() {
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            var today = new Date().toISOString().split('T')[0];
+            var isValid = true;
+
+            $('#startDateError').text('');
+            $('#endDateError').text('');
+
+            if (!startDate) {
+                $('#startDateError').text('Пожалуйста, выберите дату начала.');
+                isValid = false;
+            }
+            if (!endDate) {
+                $('#endDateError').text('Пожалуйста, выберите дату окончания.');
+                isValid = false;
+            }
+
+            if (isValid) {
+                if (startDate > today) {
+                    $('#startDateError').text('Дата начала не может быть больше сегодняшней даты.');
+                    isValid = false;
+                }
+                if (endDate > today) {
+                    $('#endDateError').text('Дата окончания не может быть больше сегодняшней даты.');
+                    isValid = false;
+                }
+                if (startDate > endDate) {
+                    $('#endDateError').text('Дата окончания не может быть раньше даты начала.');
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        $('#generateReport').click(function () {
+            if (validateDates()) {
+                var formData = $('#TimeReportWeb').serialize();
+
+                $.post('/Home/TimeReportWeb', formData, function (response) {
+                    window.location.href = '/Home/BundlingTimeReport';
+                }).fail(function () {
+                    alert('Произошла ошибка при создании отчета.');
+                });
+            }
+        });
+    });
+</script>

@@ -1,0 +1,213 @@
+﻿@using CarCenterContracts.ViewModels;
+@using CarCenterDataModels.Enums;
+
+@model CarViewModel
+
+@{
+    ViewData["Title"] = "CreateCar";
+    ViewBag.Bundlings = Model.CarBundlings;
+}
+<div class="text-center">
+    <h2 class="display-4">Создание автомобиля</h2>
+</div>
+<form id="carForm" method="post">
+    <div class="row">
+        <div class="col-4">Марка:</div>
+        <div class="col-8">
+            <select name="CarBrand" id="CarBrand" value="@Model.CarBrand">
+                @foreach (var value in Enum.GetValues(typeof(CarBrand)))
+                {
+                    <option value="@value" selected="@(value.Equals(Model.CarBrand) ? "selected" : null)">@value</option>
+                }
+            </select>
+            <span id="CarBrandError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Модель:</div>
+        <div class="col-8">
+            <input type="text" name="Model" id="Model" value="@Model.Model" />
+            <span id="ModelError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Класс:</div>
+        <div class="col-8">
+            <select name="CarClass" id="CarClass" value="@Model.CarClass">
+                @foreach (var value in Enum.GetValues(typeof(CarClass)))
+                {
+                    <option value="@value" selected="@(value.Equals(Model.CarClass) ? "selected" : null)">@value</option>
+                }
+            </select>
+            <span id="CarClassError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Год выпуска:</div>
+        <div class="col-8">
+            <input type="text" name="Year" id="Year" value="@Model.Year" />
+            <span id="YearError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">ВИН-номер:</div>
+        <div class="col-8">
+            <input type="text" name="VINnumber" id="VINnumber" value="@Model.VINnumber" />
+            <span id="VINnumberError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Особенность:</div>
+        <div class="col-8">
+            <select name="FeatureId" id="FeatureId">
+                @foreach (var feature in ViewBag.Features)
+                {
+                    <option value="@feature.Id" selected="@(feature.Id.Equals(Model.FeatureID) ? "selected" : null)">Особенность @feature.Id</option>
+                }
+            </select>
+            <span id="FeatureIdError" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="container">
+        <div>Детали</div>
+        <div class="table-responsive-lg">
+            <table id="bundlingsTable" class="display">
+                <thead>
+                    <tr>
+                        <th>ID комплектации</th>
+                        <th>     </th>
+                        <th>Стоимость</th>
+                        <th>     </th>
+                        <th>Удалить</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bundling in ViewBag.Bundlings)
+                    {
+                        <tr data-bundling-id="@bundling.Value.Id">
+                            <td>
+                                <input type="hidden" name="bundlingIds" value="@bundling.Value.Id" />@bundling.Value.Id
+                            </td>
+                            <th>     </th>
+                            <td class="bundling-price" data-price="@bundling.Value.Price">@bundling.Value.Price</td>
+                            <th>     </th>
+                            <td><button type="button" class="deleteBundling" data-bundling-id="@bundling.Value.Id">Удалить</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <select id="bundlingSelect" class="form-control">
+            <option value="">Выберите комплектацию</option>
+            @foreach (var bundling in ViewBag.AllBundlings)
+            {
+                <option value="@bundling.Id" data-price="@bundling.Price">Комплектация @bundling.Id</option>
+            }
+        </select>
+        <button type="button" id="addBundling" class="btn btn-secondary">Добавить комплектацию</button>
+    </div>
+    <div class="row">
+        <div class="col-4">Сумма:</div>
+        <div class="col-8"><input type="text" id="sum" name="sum" readonly /></div>
+    </div>
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4"><input type="submit" value="Сохранить" class="btn btn-primary" /></div>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        function updateSum() {
+            var sum = 0;
+            $('#bundlingsTable tbody tr').each(function () {
+                var price = $(this).find('.bundling-price').data('price');
+                sum += parseFloat(price);
+            });
+            $('#sum').val(sum.toFixed(2));
+        }
+
+        $(document).on('click', '.deleteBundling', function () {
+            var row = $(this).closest('tr');
+            row.remove();
+            updateSum();
+        });
+
+        $('#addBundling').click(function () {
+            var selectedBundling = $('#bundlingSelect option:selected');
+            if (selectedBundling.val()) {
+                var bundlingId = selectedBundling.val();
+                var exists = false;
+                $('#bundlingsTable tbody tr').each(function () {
+                    if ($(this).data('bundling-id') == bundlingId) {
+                        exists = true;
+                        return false;
+                    }
+                });
+                if (exists) {
+                    alert('Эта комплектация уже добавлена.');
+                    return;
+                }
+
+                var bundlingName = selectedBundling.text();
+                var bundlingPrice = selectedBundling.data('price');
+
+                var newRow = `
+                                    <tr data-bundling-id="${bundlingId}">
+                                        <td>
+                                            <input type="hidden" name="bundlingIds" value="${bundlingId}" />
+                                            ${bundlingId}
+                                        </td>
+                                        <th>     </th>
+                                        <td class="bundling-price" data-price="${bundlingPrice}">${bundlingPrice}</td>
+                                        <th>     </th>
+                                        <td><button type="button" class="deleteBundling" data-bundling-id="${bundlingId}">Удалить</button></td>
+                                    </tr>
+                                `;
+                $('#bundlingsTable tbody').append(newRow);
+
+                $('.deleteBundling').off('click').on('click', function () {
+                    var row = $(this).closest('tr');
+                    row.remove();
+                    updateSum();
+                });
+
+                $('#bundlingSelect').val('');
+
+                updateSum();
+            } else {
+                alert('Выберите комплектацию для добавления');
+            }
+        });
+
+        $('#carForm').submit(function (event) {
+            var CarBrand = $('#CarBrand').val();
+            var FeatureID = $('#FeatureID').val();
+            var CarClass = $('#CarClass').val();
+            var Model = $('#Model').val();
+            var VINnumber = $('#VINnumber').val();
+            var Year = $('#Year').val();
+            var isValid = true;
+
+            $('#CarBrandError').text('');
+            $('#CarClassError').text('');
+            $('#ModelError').text('');
+            $('#VINnumberError').text('');
+            $('#YearError').text('');
+            var totalBundlings = $('#bundlingsTable tbody tr').length;
+            if (totalBundlings == 0) {
+                alert('Пожалуйста, добавьте хотя бы одну комплектацию.');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+
+        updateSum();
+    });
+</script>
+
